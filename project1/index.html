@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Split Screen Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #3b82f6;
+        }
+
+        body {
+            height: 100vh;
+            background: #f8fafc;
+        }
+
+        .split-screen {
+            display: flex;
+            height: 100vh;
+        }
+
+        .left-side {
+            flex: 1;
+            background: var(--primary-color);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .illustration-area {
+            position: relative;
+            width: 100%;
+            height: 60%;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            opacity: 0.3;
+        }
+
+        .shape-1 {
+            width: 300px;
+            height: 300px;
+            top: -50px;
+            left: -50px;
+        }
+
+        .shape-2 {
+            width: 200px;
+            height: 200px;
+            bottom: -30px;
+            right: -30px;
+        }
+
+        .right-side {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-control {
+            border: 2px solid #e2e8f0;
+            padding: 0.75rem;
+            border-radius: 10px;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-login {
+            background: var(--primary-color);
+            border: none;
+            padding: 0.75rem;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .social-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        .social-divider::before,
+        .social-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .social-divider span {
+            padding: 0 1rem;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary-color);
+            background: #f8fafc;
+        }
+
+        @media (max-width: 768px) {
+            .split-screen {
+                flex-direction: column;
+            }
+            .left-side {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="split-screen">
+        <div class="left-side">
+            <div class="illustration-area">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="text-center">
+                    <h1 class="mb-4">Welcome Back!</h1>
+                    <p class="lead">Log in to access your account and continue your journey with us.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="right-side">
+            <div class="login-form">
+                <h2 class="text-center mb-4">Sign In</h2>
+                
+                <form>
+                    <div class="mb-4">
+                        <label class="form-label">Email address</label>
+                        <input type="email" class="form-control" required>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" required>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="remember">
+                            <label class="form-check-label" for="remember">Remember me</label>
+                        </div>
+                        <a href="#" class="text-decoration-none">Forgot password?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-login text-white w-100 mb-4">Sign In</button>
+                    
+                    <div class="social-divider mb-4">
+                        <span>Or continue with</span>
+                    </div>
+                    
+                    <div class="social-login mb-4">
+                        <a href="#" class="social-btn">
+                         <img src="google.png" alt="Google" class="img-fluid" style="max-width: 24px;">
+                        </a>
+                        <a href="#" class="social-btn">
+                             <img src="apple.png" alt="Apple" class="img-fluid" style="max-width: 24px;">
+                        </a>
+                        <a href="#" class="social-btn">
+                                <img src="github.png" alt="Github" class="img-fluid" style="max-width: 24px;">
+                        </a>
+                    </div>
+                    
+                    <div class="text-center">
+                        <span class="text-muted">Don't have an account?</span>
+                        <a href="#" class="text-decoration-none ms-1">Sign up</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
