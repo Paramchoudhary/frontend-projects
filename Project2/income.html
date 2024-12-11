@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Management Platform - Income</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        .total-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">FinanceManager</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="income.html">Income</a></li>
+                    <li class="nav-item"><a class="nav-link" href="expenses.html">Expenses</a></li>
+                    <li class="nav-item"><a class="nav-link" href="reports.html">Reports</a></li>
+                </ul>
+              
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid py-4">
+        <!-- Total Income Display -->
+        <div class="total-section">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>Total Income</h5>
+                    <h3 id="totalIncome">$0.00</h3>
+                </div>
+                <div class="col-md-4">
+                    <h5>This Month</h5>
+                    <h3 id="monthlyIncome">$0.00</h3>
+                </div>
+                <div class="col-md-4">
+                    <h5>Today</h5>
+                    <h3 id="todayIncome">$0.00</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Income Entry Form -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Add New Income</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="incomeForm">
+                            <div class="mb-3">
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-control" id="incomeDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Source</label>
+                                <input type="text" class="form-control" id="incomeSource" placeholder="Enter income source" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Category</label>
+                                <select class="form-select" id="incomeCategory" required>
+                                    <option value="">Select Category</option>
+                                    <option>Sales</option>
+                                    <option>Services</option>
+                                    <option>Investments</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Amount</label>
+                                <input type="number" class="form-control" id="incomeAmount" placeholder="Enter amount" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Notes (Optional)</label>
+                                <textarea class="form-control" id="incomeNotes" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Add Income</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income List -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Income Records</h5>
+                        <div>
+                            <input type="text" class="form-control" id="searchIncome" placeholder="Search records...">
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table" id="incomeTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Source</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+       $(document).ready(function() {
+    // Get income data from localStorage or initialize empty array
+    let incomeData = JSON.parse(localStorage.getItem('incomeData')) || [];
+    
+    // Add income form submission
+    $('#incomeForm').submit(function(e) {
+        e.preventDefault();
+        
+        const newIncome = {
+            id: Date.now(),
+            date: $('#incomeDate').val(),
+            source: $('#incomeSource').val(),
+            category: $('#incomeCategory').val(),
+            amount: parseFloat($('#incomeAmount').val()),
+            notes: $('#incomeNotes').val()
+        };
+
+        // Add to income data
+        incomeData.push(newIncome);
+        
+        // Save to localStorage
+        localStorage.setItem('incomeData', JSON.stringify(incomeData));
+        
+        // Update display
+        updateIncomeTable();
+        updateTotalIncome();
+        
+        // Clear form
+        this.reset();
+        
+        // Set today's date again after form reset
+        $('#incomeDate').val(new Date().toISOString().split('T')[0]);
+        
+        // Show success message
+        alert('Income added successfully!');
+    });
+
+    // Update income table
+    function updateIncomeTable() {
+        const tbody = $('#incomeTable tbody');
+        tbody.empty();
+        
+        incomeData.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(income => {
+            tbody.append(`
+                <tr>
+                    <td>${income.date}</td>
+                    <td>${income.source}</td>
+                    <td>${income.category}</td>
+                    <td>$${income.amount.toLocaleString(undefined, {minimumFractionDigits: 2})}</td>
+                    <td>${income.notes || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-danger delete-income" data-id="${income.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `);
+        });
+    }
+
+    // Update total income displays
+    function updateTotalIncome() {
+        const total = incomeData.reduce((sum, income) => sum + income.amount, 0);
+        $('#totalIncome').text('$' + total.toLocaleString(undefined, {minimumFractionDigits: 2}));
+        
+        // Calculate monthly income
+        const currentMonth = new Date().getMonth();
+        const monthlyTotal = incomeData
+            .filter(income => new Date(income.date).getMonth() === currentMonth)
+            .reduce((sum, income) => sum + income.amount, 0);
+        $('#monthlyIncome').text('$' + monthlyTotal.toLocaleString(undefined, {minimumFractionDigits: 2}));
+        
+        // Calculate today's income
+        const today = new Date().toISOString().split('T')[0];
+        const todayTotal = incomeData
+            .filter(income => income.date === today)
+            .reduce((sum, income) => sum + income.amount, 0);
+        $('#todayIncome').text('$' + todayTotal.toLocaleString(undefined, {minimumFractionDigits: 2}));
+    }
+
+    // Delete income
+    $(document).on('click', '.delete-income', function() {
+        if (confirm('Are you sure you want to delete this income record?')) {
+            const id = $(this).data('id');
+            incomeData = incomeData.filter(item => item.id !== id);
+            // Update localStorage after deletion
+            localStorage.setItem('incomeData', JSON.stringify(incomeData));
+            updateIncomeTable();
+            updateTotalIncome();
+        }
+    });
+
+    // Search functionality
+    $('#searchIncome').on('keyup', function() {
+        const searchText = $(this).val().toLowerCase();
+        $('#incomeTable tbody tr').filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(searchText) > -1);
+        });
+    });
+
+    // Set today's date as default
+    $('#incomeDate').val(new Date().toISOString().split('T')[0]);
+
+    // Load initial data
+    updateIncomeTable();
+    updateTotalIncome();
+
+    // Listen for changes in other tabs/windows
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'incomeData') {
+            incomeData = JSON.parse(e.newValue || '[]');
+            updateIncomeTable();
+            updateTotalIncome();
+        }
+    });
+});
+    </script>
+</body>
+</html>
